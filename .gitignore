@@ -1,0 +1,16 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+dist/
+
+# TypeScript incremental caches
+*.tsbuildinfo
+
+# Local/derived config artifacts
+vite.config.js
+vite.config.d.ts
+
+# Local reference assets not needed for deploy
+code.html
+screen.png
