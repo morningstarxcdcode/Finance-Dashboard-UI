@@ -483,6 +483,37 @@ button {
   gap: 14px;
 }
 
+.spending-donut-wrap {
+  display: grid;
+  justify-content: center;
+}
+
+.spending-donut {
+  width: 208px;
+  height: 208px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+}
+
+.spending-donut-center {
+  width: 124px;
+  height: 124px;
+  border-radius: 50%;
+  background: var(--surface-strong);
+  border: 1px solid var(--border);
+  display: grid;
+  place-items: center;
+  text-align: center;
+  padding: 8px;
+}
+
+.spending-total {
+  margin: 4px 0 0;
+  font-size: 20px;
+  font-weight: 700;
+}
+
 .status-progress {
   height: 16px;
   border-radius: 999px;
@@ -524,8 +555,15 @@ button {
   background: var(--surface-soft);
   display: flex;
   justify-content: space-between;
+  align-items: center;
   gap: 8px;
   padding: 10px;
+}
+
+.legend-item-left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
 }
 
 .legend-label {

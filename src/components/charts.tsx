@@ -197,31 +197,59 @@ export function BalanceTrendChart({ monthlyTotals, periodLabel, onPeriodLabelCli
 }
 
 export function SpendingBreakdownCard({ spendingBreakdown, onViewStatus }: SpendingBreakdownCardProps) {
-  const total = spendingBreakdown.reduce((sum, item) => sum + item.amount, 0) || 1;
-  const top = spendingBreakdown[0];
+  const total = spendingBreakdown.reduce((sum, item) => sum + item.amount, 0);
+  const slices = (spendingBreakdown.length > 0 ? spendingBreakdown : [{ category: 'No expenses yet', amount: 1, color: '#d9dbe5' }]).map((item) => {
+    const share = total > 0 ? (item.amount / total) * 100 : 100;
+    return { ...item, share };
+  });
+
+  let cursor = 0;
+  const gradientStops = slices
+    .map((slice) => {
+      const start = cursor;
+      const end = cursor + slice.share;
+      cursor = end;
+      return `${slice.color} ${start}% ${end}%`;
+    })
+    .join(', ');
 
   return (
     <section className="glass-card section-card spending-grid" aria-label="Spending breakdown">
       <div className="section-header">
         <div>
-          <h2 className="section-title">Formation Status</h2>
-          <p className="section-description">In progress</p>
+          <h2 className="section-title">Spending Breakdown</h2>
+          <p className="section-description">Expense distribution by category</p>
         </div>
-        <button type="button" className="theme-button" aria-label="Open formation status" onClick={onViewStatus}>
+        <button type="button" className="theme-button" aria-label="Open spending details" onClick={onViewStatus}>
           →
         </button>
       </div>
 
-      <div className="status-progress" aria-hidden="true">
-        <span className="status-progress-value" />
+      <div className="spending-donut-wrap" role="img" aria-label="Category spending donut chart">
+        <div className="spending-donut" style={{ background: `conic-gradient(${gradientStops})` }}>
+          <div className="spending-donut-center">
+            <p className="metric-title">Total spent</p>
+            <p className="spending-total">{formatCurrency(total)}</p>
+          </div>
+        </div>
       </div>
 
-      <div>
-        <h3 className="section-title section-title-small">Estimated Processing</h3>
-        <p className="section-description">4-5 Business Days</p>
+      <div className="legend-list" aria-label="Category totals">
+        {slices.map((slice) => (
+          <article className="legend-card" key={slice.category}>
+            <div className="legend-item-left">
+              <span className="legend-swatch" style={{ background: slice.color }} aria-hidden="true" />
+              <div>
+                <p className="legend-label">{slice.category}</p>
+                <p className="legend-value">{slice.share.toFixed(1)}%</p>
+              </div>
+            </div>
+            <strong>{formatCurrency(slice.amount)}</strong>
+          </article>
+        ))}
       </div>
 
-      <button type="button" className="primary-button status-button" onClick={onViewStatus}>View status</button>
+      <button type="button" className="primary-button status-button" onClick={onViewStatus}>View details</button>
     </section>
   );
 }
